@@ -49,6 +49,19 @@ void delayMS(int ms) {
     SysCtlDelay( (g_ui32SysClock/(3*1000))*ms ) ;  // less accurate
 }
 
+
+void stopSignal(){
+	GPIOPinWrite(MAIN_LIGHT_PORT, mainRed|mainYellow|mainGreen, 0x04);
+	delayMS(5000);
+	GPIOPinWrite(MAIN_LIGHT_PORT, mainRed|mainYellow|mainGreen, 0x02);
+	GPIOPinWrite(PED_LIGHT_PORT,  pedGreen|pedRed, 0x02);
+}
+
+void goSignal(){
+	GPIOPinWrite(MAIN_LIGHT_PORT, mainRed|mainYellow|mainGreen, 0x08);
+	GPIOPinWrite(PED_LIGHT_PORT,  pedGreen|pedRed, 0x01);
+}
+
 int main(void)
 {
 		//
@@ -72,15 +85,13 @@ int main(void)
 
 	while(1)
 	{
-		GPIOPinWrite(MAIN_LIGHT_PORT, mainRed|mainYellow|mainGreen, 0x0E);		// assure the red and blue LEDs are off
-		GPIOPinWrite(PED_LIGHT_PORT,  pedGreen|pedRed, 0x03);
+		goSignal();
 
-		delayMS(500);
+		delayMS(10000);
 
-		GPIOPinWrite(MAIN_LIGHT_PORT, mainRed|mainYellow|mainGreen, 0x00);		// assure the red and blue LEDs are off
-		GPIOPinWrite(PED_LIGHT_PORT,  pedGreen|pedRed, 0x00);
+		stopSignal();
 
-		delayMS(500);
+		delayMS(5000);
 
 	}
 }
